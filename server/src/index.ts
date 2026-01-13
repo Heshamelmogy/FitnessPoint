@@ -18,11 +18,25 @@ app.use(cors());
 app.use(express.json());
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    message: 'FitnessPoint API is running'
-  });
+app.get('/api/health', async (req, res) => {
+  try {
+    const { dbGet } = await import('./database');
+    const result: any = await dbGet('SELECT COUNT(*) as count FROM users');
+    res.json({ 
+      status: 'ok', 
+      message: 'FitnessPoint API is running',
+      database: {
+        connected: true,
+        users: result.count
+      }
+    });
+  } catch (error: any) {
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'Database connection failed',
+      error: error.message
+    });
+  }
 });
 
 // Routes

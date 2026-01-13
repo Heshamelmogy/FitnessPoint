@@ -11,24 +11,47 @@ const getDbPath = () => {
     ? path.join(__dirname, '..')  // If in dist, go up to server/
     : path.join(__dirname, '..');  // If in src, go up to server/
   
-  const dbPath = path.join(baseDir, 'fitnesspoint.db');
-  console.log('📁 Database path:', dbPath);
+  const dbPath = path.resolve(baseDir, 'fitnesspoint.db');
+  const absolutePath = path.resolve(dbPath);
+  
+  console.log('📁 Database path (relative):', dbPath);
+  console.log('📁 Database path (absolute):', absolutePath);
   
   // Ensure directory exists
-  const dbDir = path.dirname(dbPath);
+  const dbDir = path.dirname(absolutePath);
   if (!fs.existsSync(dbDir)) {
+    console.log('📂 Creating database directory:', dbDir);
     fs.mkdirSync(dbDir, { recursive: true });
   }
   
-  return dbPath;
+  // Check if we can write to the directory
+  try {
+    const testFile = path.join(dbDir, '.test-write');
+    fs.writeFileSync(testFile, 'test');
+    fs.unlinkSync(testFile);
+    console.log('✅ Database directory is writable');
+  } catch (err) {
+    console.error('❌ Database directory is not writable:', err);
+    throw new Error(`Cannot write to database directory: ${dbDir}`);
+  }
+  
+  return absolutePath;
 };
 
 const dbPath = getDbPath();
-const db = new sqlite3.Database(dbPath, (err) => {
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) {
     console.error('❌ Error opening database:', err);
+    console.error('   Path:', dbPath);
+    console.error('   Error details:', err.message);
+    throw err;
   } else {
-    console.log('✅ Database connection opened:', dbPath);
+    console.log('✅ Database connection opened successfully');
+    console.log('   File exists:', fs.existsSync(dbPath));
+    if (fs.existsSync(dbPath)) {
+      const stats = fs.statSync(dbPath);
+      console.log('   File size:', stats.size, 'bytes');
+    }
   }
 });
 
@@ -236,8 +259,19 @@ export const initDatabase = async () => {
     // Verify database is working by checking if we can query
     const userCount: any = await dbGet('SELECT COUNT(*) as count FROM users');
     console.log(`✅ Database initialized successfully! (${userCount.count} users in database)`);
-  } catch (error) {
+    
+    // Verify database file exists and is accessible
+    if (fs.existsSync(dbPath)) {
+      const stats = fs.statSync(dbPath);
+      console.log(`✅ Database file verified: ${stats.size} bytes, readable: ${fs.constants.R_OK}, writable: ${fs.constants.W_OK}`);
+    } else {
+      console.warn('⚠️  Warning: Database file not found after initialization');
+    }
+  } catch (error: any) {
     console.error('❌ Error initializing database:', error);
+    console.error('   Database path:', dbPath);
+    console.error('   Error message:', error.message);
+    console.error('   Error stack:', error.stack);
     throw error;
   }
 };
