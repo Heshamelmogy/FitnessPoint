@@ -4,6 +4,7 @@
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${YELLOW}🚀 Starting FitnessPoint...${NC}"
@@ -29,19 +30,23 @@ if [ ! -f "server/.env" ]; then
     echo -e "${GREEN}✅ .env file created!${NC}"
 fi
 
-# Create client .env file for Codespaces
-if [ ! -f "client/.env" ]; then
-    echo -e "${YELLOW}📝 Creating client .env file for Codespaces...${NC}"
-    echo "HOST=0.0.0.0" > client/.env
-    echo "DANGEROUSLY_DISABLE_HOST_CHECK=true" >> client/.env
-    echo -e "${GREEN}✅ Client .env file created!${NC}"
-fi
+# Create client .env file for Codespaces - CRITICAL for port forwarding
+echo -e "${YELLOW}📝 Ensuring client .env is configured...${NC}"
+mkdir -p client
+cat > client/.env << 'ENVEOF'
+HOST=0.0.0.0
+DANGEROUSLY_DISABLE_HOST_CHECK=true
+WDS_SOCKET_HOST=localhost
+WDS_SOCKET_PORT=3000
+BROWSER=none
+ENVEOF
+echo -e "${GREEN}✅ Client .env configured!${NC}"
 
 # Check if we're in Codespaces
 if [ -n "$CODESPACE_NAME" ]; then
-    echo -e "${BLUE}🔗 Codespace detected!${NC}"
-    echo -e "${YELLOW}📌 Make sure ports 3000 and 5000 are forwarded in your Codespace${NC}"
-    echo -e "${YELLOW}   The frontend will automatically connect to the backend on port 5000${NC}"
+    echo -e "${BLUE}🔗 Codespace detected: $CODESPACE_NAME${NC}"
+    echo -e "${YELLOW}📌 CRITICAL: Make sure ports 3000 and 5000 are PUBLIC in Ports tab${NC}"
+    echo -e "${YELLOW}   Right-click each port → Port Visibility → Public${NC}"
     echo ""
 fi
 
@@ -51,10 +56,12 @@ echo -e "${YELLOW}   Backend: http://localhost:5000${NC}"
 echo -e "${YELLOW}   Frontend: http://localhost:3000${NC}"
 echo ""
 
-# Check if we're in Codespaces and set HOST for React
-if [ -n "$CODESPACE_NAME" ]; then
-    export HOST=0.0.0.0
-    echo -e "${BLUE}📡 Setting HOST=0.0.0.0 for Codespace port forwarding${NC}"
-fi
+# Export environment variables for React (Codespaces needs this)
+export HOST=0.0.0.0
+export DANGEROUSLY_DISABLE_HOST_CHECK=true
+export BROWSER=none
+export WDS_SOCKET_HOST=localhost
+export WDS_SOCKET_PORT=3000
 
+# Start servers
 npm run dev
