@@ -29,6 +29,14 @@ if [ ! -f "server/.env" ]; then
     echo -e "${GREEN}✅ .env file created!${NC}"
 fi
 
+# Create client .env file for Codespaces
+if [ ! -f "client/.env" ]; then
+    echo -e "${YELLOW}📝 Creating client .env file for Codespaces...${NC}"
+    echo "HOST=0.0.0.0" > client/.env
+    echo "DANGEROUSLY_DISABLE_HOST_CHECK=true" >> client/.env
+    echo -e "${GREEN}✅ Client .env file created!${NC}"
+fi
+
 # Check if we're in Codespaces
 if [ -n "$CODESPACE_NAME" ]; then
     echo -e "${BLUE}🔗 Codespace detected!${NC}"
