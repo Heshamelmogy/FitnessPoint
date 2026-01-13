@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { HeartIcon, ChatBubbleLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
@@ -211,7 +211,7 @@ const Post: React.FC<PostProps> = ({ post, onUpdate, onDelete }) => {
             <div className="mb-4">
               <img
                 src={post.image_url}
-                alt="Post image"
+                alt="Post content"
                 className="w-full rounded-lg object-cover max-h-96"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';

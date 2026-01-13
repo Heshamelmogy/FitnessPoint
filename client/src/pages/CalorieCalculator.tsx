@@ -59,7 +59,6 @@ const CalorieCalculator: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [dietaryPreferences, setDietaryPreferences] = useState<string[]>([]);
-  const [showPreferences, setShowPreferences] = useState(false);
   const [foodSuggestions, setFoodSuggestions] = useState<FoodSuggestions | null>(null);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 

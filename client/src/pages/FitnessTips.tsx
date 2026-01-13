@@ -26,10 +26,6 @@ const FitnessTips: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'tips' | 'exercises'>('tips');
 
-  useEffect(() => {
-    fetchData();
-  }, [selectedGoal]);
-
   const fetchData = async () => {
     setLoading(true);
     try {
