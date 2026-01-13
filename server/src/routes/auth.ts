@@ -29,6 +29,8 @@ router.post('/register', async (req, res) => {
       'INSERT INTO users (username, email, password, age, gender, height, weight, activity_level, goal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [username, email, hashedPassword, age || null, gender || null, height || null, weight || null, activity_level || null, goal || null]
     );
+    
+    console.log('✅ New user registered:', username, email);
 
     const userId = result.lastID;
     const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
@@ -48,8 +50,11 @@ router.post('/register', async (req, res) => {
       }
     });
   } catch (error: any) {
-    console.error('Register error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('❌ Register error:', error);
+    if (error.message && error.message.includes('UNIQUE constraint')) {
+      return res.status(400).json({ error: 'Username or email already exists' });
+    }
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 
@@ -91,8 +96,8 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error: any) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('❌ Login error:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 

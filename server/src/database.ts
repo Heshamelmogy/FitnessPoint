@@ -1,8 +1,36 @@
 import sqlite3 from 'sqlite3';
 import path from 'path';
+import fs from 'fs';
 
-const dbPath = path.join(__dirname, '../fitnesspoint.db');
-const db = new sqlite3.Database(dbPath);
+// Determine database path - works in both development and production
+const getDbPath = () => {
+  // In development (ts-node-dev), __dirname is server/src
+  // In production (compiled), __dirname is server/dist
+  // We want the DB file in server/ directory
+  const baseDir = __dirname.includes('dist') 
+    ? path.join(__dirname, '..')  // If in dist, go up to server/
+    : path.join(__dirname, '..');  // If in src, go up to server/
+  
+  const dbPath = path.join(baseDir, 'fitnesspoint.db');
+  console.log('📁 Database path:', dbPath);
+  
+  // Ensure directory exists
+  const dbDir = path.dirname(dbPath);
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+  
+  return dbPath;
+};
+
+const dbPath = getDbPath();
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error('❌ Error opening database:', err);
+  } else {
+    console.log('✅ Database connection opened:', dbPath);
+  }
+});
 
 // Enable foreign keys
 db.run('PRAGMA foreign_keys = ON');
@@ -110,6 +138,8 @@ const populateFoods = async () => {
 
 export const initDatabase = async () => {
   try {
+    console.log('🔄 Initializing database...');
+    
     // Users table
     await dbRun(`
       CREATE TABLE IF NOT EXISTS users (
@@ -126,6 +156,7 @@ export const initDatabase = async () => {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
+    console.log('✅ Users table created/verified');
 
     // Posts table
     await dbRun(`
@@ -196,12 +227,17 @@ export const initDatabase = async () => {
     // Check if foods table is empty and populate with initial data
     const foodCount: any = await dbGet('SELECT COUNT(*) as count FROM foods');
     if (foodCount.count === 0) {
+      console.log('📦 Populating foods table...');
       await populateFoods();
+    } else {
+      console.log(`✅ Foods table already has ${foodCount.count} items`);
     }
 
-    console.log('Database initialized successfully');
+    // Verify database is working by checking if we can query
+    const userCount: any = await dbGet('SELECT COUNT(*) as count FROM users');
+    console.log(`✅ Database initialized successfully! (${userCount.count} users in database)`);
   } catch (error) {
-    console.error('Error initializing database:', error);
+    console.error('❌ Error initializing database:', error);
     throw error;
   }
 };
