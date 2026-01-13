@@ -40,10 +40,21 @@ When running in Codespaces, you'll need to forward ports:
 1. The backend runs on port **5000**
 2. The frontend runs on port **3000**
 
+### ⚠️ IMPORTANT: Make Ports Public
+
+**Both ports MUST be set to Public** for the application to work properly:
+
+1. Go to the **"Ports"** tab in Codespaces
+2. For each port (3000 and 5000):
+   - Right-click → **"Port Visibility"** → **"Public"**
+   - Or click the visibility icon (🔒) to change it to Public (🌐)
+
+**Why?** The frontend needs to make API requests to the backend. If ports are Private, the browser can't access them, causing CORS errors and connection failures.
+
 Codespaces should automatically detect these ports and prompt you to forward them. If not:
 - Go to the "Ports" tab in Codespaces
 - Forward ports 3000 and 5000
-- Make them public if you want to access them externally
+- **Make sure both are set to Public** (not Private)
 
 ## Troubleshooting
 
