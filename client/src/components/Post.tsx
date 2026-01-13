@@ -3,8 +3,7 @@ import axios from 'axios';
 import { HeartIcon, ChatBubbleLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { useAuth } from '../context/AuthContext';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+import { API_URL } from '../config/api';
 
 interface PostProps {
   post: {

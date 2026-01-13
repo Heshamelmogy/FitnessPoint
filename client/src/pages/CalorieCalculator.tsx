@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { CalculatorIcon, SparklesIcon } from '@heroicons/react/24/outline';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+import { API_URL } from '../config/api';
 
 interface CalorieResult {
   bmr: number;
