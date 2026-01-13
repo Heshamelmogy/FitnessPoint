@@ -4,6 +4,7 @@
   "description": "Fitness awareness website with social features",
   "scripts": {
     "start": "bash start.sh",
+    "update": "bash update-and-restart.sh",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
     "client": "cd client && npm start",
