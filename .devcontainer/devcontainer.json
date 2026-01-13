@@ -4,7 +4,7 @@
   "portsAttributes": {
     "3000": {
       "label": "Frontend (React)",
-      "onAutoForward": "notify",
+      "onAutoForward": "openPreview",
       "protocol": "https",
       "visibility": "public"
     },
@@ -27,6 +27,6 @@
       }
     }
   },
-  "postCreateCommand": "npm run install-all",
+  "postCreateCommand": "bash -c 'npm run install-all && echo \"HOST=0.0.0.0\" > client/.env && echo \"DANGEROUSLY_DISABLE_HOST_CHECK=true\" >> client/.env && echo \"WDS_SOCKET_HOST=localhost\" >> client/.env && echo \"WDS_SOCKET_PORT=3000\" >> client/.env && echo \"BROWSER=none\" >> client/.env'",
   "remoteUser": "codespace"
 }

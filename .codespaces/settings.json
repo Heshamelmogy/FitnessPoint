@@ -2,11 +2,13 @@
   "ports": {
     "3000": {
       "visibility": "public",
-      "label": "Frontend (React)"
+      "label": "Frontend (React)",
+      "onAutoForward": "openPreview"
     },
     "5000": {
       "visibility": "public",
-      "label": "Backend (API)"
+      "label": "Backend (API)",
+      "onAutoForward": "notify"
     }
   }
 }
