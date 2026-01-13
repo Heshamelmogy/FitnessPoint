@@ -9,7 +9,7 @@
     "diagnose": "bash diagnose.sh",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
-    "client": "cd client && HOST=0.0.0.0 npm start",
+    "client": "cd client && npm start",
     "install-all": "npm install && cd server && npm install && cd ../client && npm install --legacy-peer-deps",
     "stop": "powershell -ExecutionPolicy Bypass -File ./stop-servers.ps1"
   },
