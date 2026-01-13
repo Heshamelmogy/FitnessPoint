@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { FireIcon, LightBulbIcon, AcademicCapIcon } from '@heroicons/react/24/outline';
@@ -26,7 +26,7 @@ const FitnessTips: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'tips' | 'exercises'>('tips');
 
-  const fetchData = React.useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [tipsResponse, exercisesResponse] = await Promise.all([
