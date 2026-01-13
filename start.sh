@@ -42,4 +42,8 @@ echo -e "${GREEN}🎉 Starting development servers...${NC}"
 echo -e "${YELLOW}   Backend: http://localhost:5000${NC}"
 echo -e "${YELLOW}   Frontend: http://localhost:3000${NC}"
 echo ""
+
+# Set HOST for React to bind to all interfaces (needed for Codespaces)
+export HOST=0.0.0.0
+
 npm run dev
