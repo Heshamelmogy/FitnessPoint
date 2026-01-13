@@ -26,7 +26,7 @@ const FitnessTips: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'tips' | 'exercises'>('tips');
 
-  const fetchData = async () => {
+  const fetchData = React.useCallback(async () => {
     setLoading(true);
     try {
       const [tipsResponse, exercisesResponse] = await Promise.all([
@@ -40,7 +40,11 @@ const FitnessTips: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedGoal]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
