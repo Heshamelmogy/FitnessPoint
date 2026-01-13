@@ -1,12 +1,15 @@
 # FitnessPoint
 
-A comprehensive fitness awareness website with social features, calorie calculator, and personalized fitness tips and exercises.
+A comprehensive fitness awareness website with social features, calorie calculator, personalized food suggestions, and fitness tips and exercises.
 
 ## Features
 
 - **User Authentication**: Secure registration and login system with JWT tokens
 - **Social Feed**: Post, like, and comment on fitness journeys to encourage each other
+  - Edit and delete your own posts
+  - Upload photos with posts
 - **Calorie Calculator**: Calculate your daily calorie needs and macronutrient targets based on your goals
+- **Food Suggestions**: Get personalized meal suggestions based on your calorie needs and dietary preferences (Halal, Vegan, Vegetarian, Lactose-Free, Gluten-Free, Keto, Paleo, Low-Carb, High-Protein)
 - **Fitness Tips & Exercises**: Get personalized fitness advice and exercise recommendations
 - **User Profiles**: Manage your personal information and fitness goals
 
@@ -126,13 +129,16 @@ FitnessPoint/
 
 ### Posts
 - `GET /api/posts` - Get all posts (feed)
-- `POST /api/posts` - Create a new post
+- `POST /api/posts` - Create a new post (with optional image)
+- `PUT /api/posts/:id` - Update a post (owner only)
+- `DELETE /api/posts/:id` - Delete a post (owner only)
 - `POST /api/posts/:id/like` - Like/unlike a post
 - `GET /api/posts/:id/comments` - Get comments for a post
 - `POST /api/posts/:id/comments` - Add a comment to a post
 
 ### Calories
 - `POST /api/calories/calculate` - Calculate calorie needs
+- `POST /api/calories/suggest-foods` - Get food suggestions based on calorie needs and dietary preferences
 
 ### Fitness
 - `GET /api/fitness/tips?goal=lose|maintain|gain` - Get fitness tips
@@ -142,10 +148,11 @@ FitnessPoint/
 
 The application uses SQLite with the following tables:
 - `users` - User accounts and profiles
-- `posts` - Social media posts
+- `posts` - Social media posts (with optional image_url)
 - `comments` - Comments on posts
 - `likes` - Likes on posts
 - `follows` - User follow relationships
+- `foods` - Food database with nutritional information and dietary tags
 
 ## License
 
