@@ -1,0 +1,32 @@
+{
+  "name": "FitnessPoint Development",
+  "forwardPorts": [3000, 5000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (React)",
+      "onAutoForward": "notify",
+      "protocol": "https",
+      "visibility": "public"
+    },
+    "5000": {
+      "label": "Backend (API)",
+      "onAutoForward": "notify",
+      "protocol": "https",
+      "visibility": "public"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "postCreateCommand": "npm run install-all",
+  "remoteUser": "codespace"
+}
